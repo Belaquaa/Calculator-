@@ -154,19 +154,19 @@ public class AppTest {
                         "    24\n" +
                         "     -\n" +
                         "     1\n",
-                Division.makeDivision(new BigDecimal("78945"), new BigDecimal("4"), Division.DivisionStyle.GERMAN));
+                Division.makeDivision(new BigDecimal("78945"), new BigDecimal("4"), DivisionStyle.GERMAN));
         Assertions.assertEquals(
                 "_12 : -4 = -3\n" +
                         " 12\n" +
                         "  -\n" +
                         "  0\n",
-                Division.makeDivision(new BigDecimal("-12"), new BigDecimal("4"), Division.DivisionStyle.GERMAN));
+                Division.makeDivision(new BigDecimal("-12"), new BigDecimal("4"), DivisionStyle.GERMAN));
         Assertions.assertEquals(
                 "_100 : 2 = 50\n" +
                         " 10\n" +
                         "  -\n" +
                         "  00\n",
-                Division.makeDivision(new BigDecimal("100"), new BigDecimal("2"), Division.DivisionStyle.GERMAN));
+                Division.makeDivision(new BigDecimal("100"), new BigDecimal("2"), DivisionStyle.GERMAN));
         Assertions.assertEquals(
                 "_22000 : -12 = -1833\n" +
                         " 12\n" +
@@ -181,7 +181,7 @@ public class AppTest {
                         "    36\n" +
                         "    --\n" +
                         "     4\n",
-                Division.makeDivision(new BigDecimal("-22000"), new BigDecimal("12"), Division.DivisionStyle.GERMAN));
+                Division.makeDivision(new BigDecimal("-22000"), new BigDecimal("12"), DivisionStyle.GERMAN));
     }
 
     // InputService test

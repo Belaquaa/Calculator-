@@ -9,7 +9,7 @@ public class App {
         BigDecimal divisor = InputService.getDivisor();
         String getStyle = InputService.getStyle();
 
-        Division.DivisionStyle style = Division.DivisionStyle.CLASSIC;
+        DivisionStyle style = DivisionStyle.CLASSIC;
 
         // transform data via class Division
         int scale = WholeNumber.getScale(dividend, divisor);
@@ -18,7 +18,7 @@ public class App {
 
         // fit DivisionStyle from class Division
         try {
-            style = Division.DivisionStyle.valueOf(getStyle);
+            style = DivisionStyle.valueOf(getStyle);
         } catch (IllegalArgumentException e) {
             System.err.println("Стиль '" + getStyle +
                     "' не соответствует значениям DivisionStyle. Применён стиль по умолчанию.");

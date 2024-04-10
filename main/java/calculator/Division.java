@@ -5,11 +5,6 @@ import java.math.RoundingMode;
 
 public class Division {
 
-    public enum DivisionStyle {
-        CLASSIC,
-        GERMAN
-    }
-
     public static String makeDivision(BigDecimal signDividend, BigDecimal signDivisor) {
         return makeDivision(signDividend, signDivisor, DivisionStyle.CLASSIC);
     }
@@ -62,8 +57,81 @@ public class Division {
 
     }
 
+
+
+
+
+    // абстрактный продукт
+    interface DataDisplayStrategy {
+        void displayData(StringBuilder result, BigDecimal dividend, BigDecimal divisor,
+                         String sign, StringBuilder quotient, int[] index, int tab);
+    }
+
+    // конкретные продукты (classic, german)
+    private static class ClassicDataDisplayStrategy implements DataDisplayStrategy {
+        @Override
+        public void displayData(StringBuilder result, BigDecimal dividend, BigDecimal divisor,
+                                String sign, StringBuilder quotient, int[] index, int tab) {
+            result.insert(index[2], assemblyString(tab, ' ') + "│" + sign + quotient);
+            result.insert(index[1], assemblyString(tab, ' ') + "│" + sign +
+                    assemblyString(Math.max(quotient.length(), divisor.precision()), '-'));
+            result.insert(index[0], "│" + sign + divisor);
+        }
+    }
+
+    private static class GermanDataDisplayStrategy implements DataDisplayStrategy {
+        @Override
+        public void displayData(StringBuilder result, BigDecimal dividend, BigDecimal divisor,
+                                String sign, StringBuilder quotient, int[] index, int tab) {
+            result.insert(index[0], " : " + sign + divisor + " = " + sign + quotient);
+        }
+    }
+
+    // абстрактная фабрика
+    interface DataDisplayFactory {
+        DataDisplayStrategy createDisplayStrategy();
+    }
+
+    // конкретные фабрики (отображение classic, german)
+    private static class ClassicDataDisplayFactory implements DataDisplayFactory {
+        @Override
+        public DataDisplayStrategy createDisplayStrategy() {
+            return new ClassicDataDisplayStrategy();
+        }
+    }
+
+    private static class GermanDataDisplayFactory implements DataDisplayFactory {
+        @Override
+        public DataDisplayStrategy createDisplayStrategy() {
+            return new GermanDataDisplayStrategy();
+        }
+    }
+
+    // создание фабрики
+    private static DataDisplayFactory createFactory(DivisionStyle style) {
+        switch (style) {
+            case CLASSIC:
+                return new ClassicDataDisplayFactory();
+            case GERMAN:
+                return new GermanDataDisplayFactory();
+            default:
+                throw new IllegalArgumentException("Неизвестный стиль!");
+        }
+    }
+
+    // использование фабрики
     private static void initialDataDisplay(StringBuilder result, BigDecimal dividend, BigDecimal divisor,
                                            String sign, StringBuilder quotient, DivisionStyle style) {
+
+        int[] index = findNewLineIndexes(result);
+        int tab = dividend.precision() + 1 - index[0];
+        DataDisplayFactory factory = createFactory(style);
+        DataDisplayStrategy strategy = factory.createDisplayStrategy();
+        strategy.displayData(result, dividend, divisor, sign, quotient, index, tab);
+        result.replace(1, index[0], dividend.toPlainString());
+    }
+
+    private static int[] findNewLineIndexes(StringBuilder result) {
         int[] index = new int[3];
         for (int i = 0, j = 0; i < result.length(); i++) {
             if (result.charAt(i) == '\n') {
@@ -71,22 +139,7 @@ public class Division {
                 if (j == 3) break;
             }
         }
-
-        int tab = dividend.precision() + 1 - index[0];
-        switch (style) {
-            case CLASSIC:
-                result.insert(index[2], assemblyString(tab, ' ') + "│" + sign + quotient); // это частное
-                result.insert(index[1], assemblyString(tab, ' ') + "│" + sign +
-                        assemblyString(Math.max(quotient.length(), divisor.precision()), '-')); // это минусы
-                result.insert(index[0], "│" + sign + divisor); // это делитель
-                break;
-            case GERMAN:
-                result.insert(index[0], " : " + sign + divisor + " = " + sign + quotient);
-                break;
-            default:
-                throw new IllegalArgumentException("Неизвестный стиль!");
-        }
-        result.replace(1, index[0], dividend.toPlainString());
+        return index;
     }
 
     private static String assemblyString(int numberOfSymbols, char symbol) { // строка из повторяющихся символов
