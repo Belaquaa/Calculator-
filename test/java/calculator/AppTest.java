@@ -1,5 +1,8 @@
 package calculator;
 
+import calculator.dataProcessing.DivisionStyle;
+import calculator.dataProcessing.InputService;
+import calculator.dataProcessing.WholeNumber;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -63,15 +66,15 @@ public class AppTest {
     void makeDivision_zero() {
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> {
-                    Division.makeDivision(new BigDecimal("2024"), new BigDecimal("0"));
+                    DivisionManager.makeDivision(new BigDecimal("2024"), new BigDecimal("0"));
                 });
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> {
-                    Division.makeDivision(new BigDecimal("-2024"), new BigDecimal("-0"));
+                    DivisionManager.makeDivision(new BigDecimal("-2024"), new BigDecimal("-0"));
                 });
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> {
-                    Division.makeDivision(new BigDecimal("0"), new BigDecimal("0"));
+                    DivisionManager.makeDivision(new BigDecimal("0"), new BigDecimal("0"));
                 });
 
     }
@@ -79,15 +82,15 @@ public class AppTest {
     @Test
     void makeDivision_min() {
         Assertions.assertEquals("2 : 4 = 0",
-                Division.makeDivision(new BigDecimal("2"), new BigDecimal("4")));
+                DivisionManager.makeDivision(new BigDecimal("2"), new BigDecimal("4")));
         Assertions.assertEquals("213 : -214 = 0",
-                Division.makeDivision(new BigDecimal("-213"), new BigDecimal("214")));
+                DivisionManager.makeDivision(new BigDecimal("-213"), new BigDecimal("214")));
         Assertions.assertEquals("213 : -214 = 0",
-                Division.makeDivision(new BigDecimal("213"), new BigDecimal("-214")));
+                DivisionManager.makeDivision(new BigDecimal("213"), new BigDecimal("-214")));
         Assertions.assertEquals("213 : 214 = 0",
-                Division.makeDivision(new BigDecimal("-213"), new BigDecimal("-214")));
+                DivisionManager.makeDivision(new BigDecimal("-213"), new BigDecimal("-214")));
         Assertions.assertEquals("0 : 4 = 0",
-                Division.makeDivision(new BigDecimal("+0"), new BigDecimal("4")));
+                DivisionManager.makeDivision(new BigDecimal("+0"), new BigDecimal("4")));
     }
 
     @Test
@@ -108,17 +111,17 @@ public class AppTest {
                         "   _25\n" +
                         "    24\n" +
                         "     -\n" +
-                        "     1\n", Division.makeDivision(new BigDecimal("78945"), new BigDecimal("4")));
+                        "     1\n", DivisionManager.makeDivision(new BigDecimal("78945"), new BigDecimal("4")));
         Assertions.assertEquals(
                 "_12│-4\n" +
                         " 12│--\n" +
                         "  -│-3\n" +
-                        "  0\n", Division.makeDivision(new BigDecimal("-12"), new BigDecimal("4")));
+                        "  0\n", DivisionManager.makeDivision(new BigDecimal("-12"), new BigDecimal("4")));
         Assertions.assertEquals(
                 "_100│2\n" +
                         " 10 │--\n" +
                         "  - │50\n" +
-                        "  00\n", Division.makeDivision(new BigDecimal("100"), new BigDecimal("2")));
+                        "  00\n", DivisionManager.makeDivision(new BigDecimal("100"), new BigDecimal("2")));
         Assertions.assertEquals(
                 "_22000│-12\n" +
                         " 12   │-----\n" +
@@ -132,7 +135,7 @@ public class AppTest {
                         "   _40\n" +
                         "    36\n" +
                         "    --\n" +
-                        "     4\n", Division.makeDivision(new BigDecimal("-22000"), new BigDecimal("12")));
+                        "     4\n", DivisionManager.makeDivision(new BigDecimal("-22000"), new BigDecimal("12")));
     }
 
     @Test
@@ -154,19 +157,19 @@ public class AppTest {
                         "    24\n" +
                         "     -\n" +
                         "     1\n",
-                Division.makeDivision(new BigDecimal("78945"), new BigDecimal("4"), DivisionStyle.GERMAN));
+                DivisionManager.makeDivision(new BigDecimal("78945"), new BigDecimal("4"), DivisionStyle.GERMAN));
         Assertions.assertEquals(
                 "_12 : -4 = -3\n" +
                         " 12\n" +
                         "  -\n" +
                         "  0\n",
-                Division.makeDivision(new BigDecimal("-12"), new BigDecimal("4"), DivisionStyle.GERMAN));
+                DivisionManager.makeDivision(new BigDecimal("-12"), new BigDecimal("4"), DivisionStyle.GERMAN));
         Assertions.assertEquals(
                 "_100 : 2 = 50\n" +
                         " 10\n" +
                         "  -\n" +
                         "  00\n",
-                Division.makeDivision(new BigDecimal("100"), new BigDecimal("2"), DivisionStyle.GERMAN));
+                DivisionManager.makeDivision(new BigDecimal("100"), new BigDecimal("2"), DivisionStyle.GERMAN));
         Assertions.assertEquals(
                 "_22000 : -12 = -1833\n" +
                         " 12\n" +
@@ -181,7 +184,7 @@ public class AppTest {
                         "    36\n" +
                         "    --\n" +
                         "     4\n",
-                Division.makeDivision(new BigDecimal("-22000"), new BigDecimal("12"), DivisionStyle.GERMAN));
+                DivisionManager.makeDivision(new BigDecimal("-22000"), new BigDecimal("12"), DivisionStyle.GERMAN));
     }
 
     // InputService test

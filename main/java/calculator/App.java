@@ -1,5 +1,9 @@
 package calculator;
 
+import calculator.dataProcessing.DivisionStyle;
+import calculator.dataProcessing.InputService;
+import calculator.dataProcessing.WholeNumber;
+
 import java.math.BigDecimal;
 
 public class App {
@@ -7,24 +11,14 @@ public class App {
         // initial data
         BigDecimal dividend = InputService.getDividend();
         BigDecimal divisor = InputService.getDivisor();
-        String getStyle = InputService.getStyle();
+        DivisionStyle style = DivisionStyle.valueOf(InputService.getStyle());
 
-        DivisionStyle style = DivisionStyle.CLASSIC;
-
-        // transform data via class Division
+        // normalize data
         int scale = WholeNumber.getScale(dividend, divisor);
         dividend = WholeNumber.getWholeNumber(dividend, scale);
         divisor = WholeNumber.getWholeNumber(divisor, scale);
 
-        // fit DivisionStyle from class Division
-        try {
-            style = DivisionStyle.valueOf(getStyle);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Стиль '" + getStyle +
-                    "' не соответствует значениям DivisionStyle. Применён стиль по умолчанию.");
-        }
-
         // make it work
-        System.out.println(Division.makeDivision(dividend, divisor, style));
+        System.out.println(DivisionManager.makeDivision(dividend, divisor, style));
     }
 }
